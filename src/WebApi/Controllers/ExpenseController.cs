@@ -49,7 +49,7 @@ public class ExpenseController(IMediator mediator) : ControllerBase
 	/// </summary>
 	/// <param name="userCode">The user code to search expenses for.</param>
 	/// <returns>Returns the list of expenses for the given user code.</returns>
-	[HttpGet]
+	[HttpGet("/user")]
 	[SwaggerOperation(
 		Summary = "Get expenses by user code",
 		Description = "Fetches expenses for the given user code.")]
@@ -80,7 +80,7 @@ public class ExpenseController(IMediator mediator) : ControllerBase
 	[SwaggerOperation(
 		Summary = "Get expenses by IdExpense",
 		Description = "Fetches expenses for the given IdExpense.")]
-	[SwaggerResponse(StatusCodes.Status200OK, "Expenses retrieved successfully", typeof(GetExpensesByIdCodeRequest))] //alterar
+	[SwaggerResponse(StatusCodes.Status200OK, "Expenses retrieved successfully", typeof(GetExpensesByIdCodeRequest))] //
 	[SwaggerResponse(StatusCodes.Status204NoContent, "No expenses found for the given IdExpense", null)]
 	[SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid IdExpense", typeof(BaseResponse))]
 	public async Task<IActionResult> GetExpensesByIdExpense([FromHeader, Required] int idExpense)
