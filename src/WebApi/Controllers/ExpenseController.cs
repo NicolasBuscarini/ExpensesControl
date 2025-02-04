@@ -1,6 +1,7 @@
 ﻿using CodeFlow.Start.Package.WebTransfer.Base;
 using CodeFlow.Start.Package.WebTransfer.Base.Response;
 using ExpensesControl.Application.UseCases.Expenses.Create.Dto.Request;
+using ExpensesControl.Application.UseCases.Expenses.GetByIdExpense.Dto.Request;
 using ExpensesControl.Application.UseCases.Expenses.GetByUser.Dto.Request;
 using ExpensesControl.Application.UseCases.Expenses.Import.Dto.Request;
 using ExpensesControl.Application.UseCases.Expenses.Import.Dto.Response;
@@ -48,7 +49,7 @@ public class ExpenseController(IMediator mediator) : ControllerBase
 	/// </summary>
 	/// <param name="userCode">The user code to search expenses for.</param>
 	/// <returns>Returns the list of expenses for the given user code.</returns>
-	[HttpGet]
+	[HttpGet("/user")]
 	[SwaggerOperation(
 		Summary = "Get expenses by user code",
 		Description = "Fetches expenses for the given user code.")]
@@ -58,6 +59,33 @@ public class ExpenseController(IMediator mediator) : ControllerBase
 	public async Task<IActionResult> GetExpensesByUser([FromHeader, Required] int userCode)
 	{
 		var request = new GetExpensesByUserCodeRequest(default) { UserCode = userCode };
+
+		var response = await mediator.Send(request);
+
+		if (!response.IsSuccess && response.ErrorType == ErrorType.BusinessRuleError)
+			return BadRequest(response);
+		if (response.IsSuccess && (response.Result == null || !response.Result.Any()))
+			return NoContent();
+		if (response.IsSuccess && response.Result != null && response.Result.Any())
+			return Ok(response);
+		return StatusCode(StatusCodes.Status500InternalServerError, response);
+	}
+
+	/// <summary>
+	/// Gets expenses by id.
+	/// </summary>
+	/// <param name="id">The IdExpense to search expenses for.</param>
+	/// <returns>Returns the list of expenses for the given IdExpense.</returns>
+	[HttpGet]
+	[SwaggerOperation(
+		Summary = "Get expenses by IdExpense",
+		Description = "Fetches expenses for the given IdExpense.")]
+	[SwaggerResponse(StatusCodes.Status200OK, "Expenses retrieved successfully", typeof(GetExpensesByIdCodeRequest))] //
+	[SwaggerResponse(StatusCodes.Status204NoContent, "No expenses found for the given IdExpense", null)]
+	[SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid IdExpense", typeof(BaseResponse))]
+	public async Task<IActionResult> GetExpensesByIdExpense([FromHeader, Required] int idExpense)
+	{
+		var request = new GetExpensesByIdCodeRequest(default) { Id = idExpense };
 
 		var response = await mediator.Send(request);
 

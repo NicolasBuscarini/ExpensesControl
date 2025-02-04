@@ -8,8 +8,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Data.Context.Package" Version="1.1.3" />
-		<PackageReference Include="CodeFlow.Start.Package" Version="1.1.36" />
+		<PackageReference Include="Data.Context.Package" Version="1.1.7" />
+		<PackageReference Include="CodeFlow.Start.Package" Version="1.1.40" />
 	  <PackageReference Include="Destructurama.Attributed" Version="5.1.0" />
 	</ItemGroup>
 </Project>
